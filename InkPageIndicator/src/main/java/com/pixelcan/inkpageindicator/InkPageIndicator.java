@@ -34,7 +34,6 @@ import android.support.v4.view.ViewCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.animation.FastOutSlowInInterpolator;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 import android.view.animation.Interpolator;
 
@@ -198,6 +197,9 @@ public class InkPageIndicator extends View implements ViewPager.OnPageChangeList
                 }
             }
             setJoiningFraction(leftDotPosition, fraction);
+        }
+        if (mOnPageChangeListener != null) {
+            mOnPageChangeListener.onPageScrolled(position, positionOffset, positionOffsetPixels);
         }
     }
 
@@ -654,7 +656,7 @@ public class InkPageIndicator extends View implements ViewPager.OnPageChangeList
     }
 
     private void setDotRevealFraction(int dot, float fraction) {
-        if(dot < dotRevealFractions.length) {
+        if (dot < dotRevealFractions.length) {
             dotRevealFractions[dot] = fraction;
         }
         ViewCompat.postInvalidateOnAnimation(this);
@@ -903,5 +905,15 @@ public class InkPageIndicator extends View implements ViewPager.OnPageChangeList
                 return new SavedState[size];
             }
         };
+    }
+
+    public interface OnPageChangeListener {
+        void onPageScrolled(int position, float positionOffset, int positionOffsetPixels);
+    }
+
+    private OnPageChangeListener mOnPageChangeListener;
+
+    public void setOnPageChangeListener(OnPageChangeListener onPageChangeListener) {
+        mOnPageChangeListener = onPageChangeListener;
     }
 }
